@@ -6,7 +6,7 @@
 
   if (Number.isNaN(a) || Number.isNaN(b)) {
     alert("Please enter valid integers.");
-    console.error("Invalid input(s). Received:", aStr, bStr);
+    console.log("Invalid input(s). Received:", aStr, bStr);
     return;
   }
 
@@ -14,10 +14,10 @@
     console.log(String(a));
     console.log(`Larger number is ${a}.`);
   } else if (b > a) {
-    document.body.innerHTML = String(b);
+    console.log(String(b));
     console.log(`Larger number is ${b}.`);
   } else {
-    document.body.innerHTML = `Both are equal: ${a}`;
+    console.log(`Both are equal: ${a}`);
     console.log("Numbers are equal.");
   }
 })();
