@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Runner</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial,
+          sans-serif;
+        padding: 18px;
+      }
+      h2 {
+        margin: 0 0 10px;
+      }
+      #output {
+        white-space: pre-wrap;
+        background: #f9f9f9;
+        border: 1px solid #e6e6e6;
+        border-radius: 10px;
+        padding: 12px;
+        min-height: 120px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 id="title">Runner</h2>
+    <div id="output"></div>
+
+    <script>
+      const out = document.getElementById("output");
+      const append = (msg) => {
+        out.textContent += msg + "\n";
+      };
+
+      const origLog = console.log.bind(console);
+      const origErr = console.error.bind(console);
+      console.log = (...args) => {
+        append(args.map(toText).join(" "));
+        origLog(...args);
+      };
+      console.error = (...args) => {
+        append("Error: " + args.map(toText).join(" "));
+        origErr(...args);
+      };
+      window.addEventListener("error", (e) => append("Error: " + e.message));
+      window.addEventListener("unhandledrejection", (e) =>
+        append("Error: " + (e.reason && (e.reason.message || e.reason)))
+      );
+
+      function toText(a) {
+        try {
+          return typeof a === "object" ? JSON.stringify(a) : String(a);
+        } catch {
+          return String(a);
+        }
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const file = params.get("file");
+      document.getElementById("title").textContent =
+        "Runner: " + (file || "(none)");
+
+      if (!file) {
+        append("Error: no file specified.");
+      } else {
+        const s = document.createElement("script");
+        s.src = new URL(file, window.location.href).href;
+        s.onload = () => append("Loaded: " + s.src);
+        s.onerror = () => append("Failed to load: " + s.src);
+        document.body.appendChild(s);
+      }
+    </script>
+  </body>
+</html>
