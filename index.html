@@ -65,7 +65,6 @@
           return;
         }
 
-        // Build an absolute URL so it works from about:blank
         const scriptURL = new URL("js/" + fileName, window.location.href).href;
 
         w.document.open();
@@ -87,13 +86,13 @@
       const out = document.getElementById('output');
       const append = (msg) => { out.textContent += msg + "\\n"; };
 
-      // Capture console.log AND console.error
+      // Capture console.log and console.error
       const origLog = console.log.bind(console);
       const origErr = console.error.bind(console);
       console.log = (...args) => { append(args.map(toText).join(' ')); origLog(...args); };
       console.error = (...args) => { append("Error: " + args.map(toText).join(' ')); origErr(...args); };
 
-      // Show uncaught errors
+      // Surface uncaught errors/rejections
       window.addEventListener('error', e => append("Error: " + e.message));
       window.addEventListener('unhandledrejection', e => append("Error: " + (e.reason && (e.reason.message || e.reason))));
 
@@ -103,7 +102,17 @@
       }
     })();
   <\\/script>
-  <script src="${scriptURL}"><\\/script>
+
+  <script>
+    // Tell you if the file loads or not
+    (function () {
+      const s = document.createElement('script');
+      s.src = "${scriptURL}";
+      s.onload = () => document.getElementById('output').textContent += "Loaded: ${scriptURL}\\n";
+      s.onerror = () => document.getElementById('output').textContent += "Failed to load: ${scriptURL}\\n";
+      document.body.appendChild(s);
+    })();
+  <\\/script>
 </body></html>`);
         w.document.close();
         w.focus();
