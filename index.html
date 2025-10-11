@@ -64,19 +64,38 @@
           alert("Pop-up blocked. Please allow pop-ups for this file.");
           return;
         }
+
+        // Build a minimal page with an Output panel and a console.log capture
         w.document.open();
         w.document.write(`<!doctype html>
         <html><head>
           <meta charset='utf-8'/>
           <title>${fileName}</title>
           <style>
-            body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; padding: 1rem 1.25rem; }
-            .box { background:#f9f9f9; border:1px solid #e6e6e6; border-radius:10px; padding:12px; margin-top:10px; }
+            body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; padding: 18px; }
+            h2 { margin: 0 0 10px; }
+            #output { white-space: pre-wrap; background:#f9f9f9; border:1px solid #e6e6e6; border-radius:10px; padding:12px; min-height:120px; }
           </style>
         </head>
         <body>
           <h2>Runner: ${fileName}</h2>
-          <div class='box'>Interact with this window for any prompts/alerts. Open this window’s console for logs.</div>
+          <div id="output"></div>
+          <script>
+            (function(){
+              const out = document.getElementById('output');
+              const origLog = console.log.bind(console);
+              console.log = function(...args){
+                try {
+                  out.textContent += args.map(a => 
+                    typeof a === 'object' ? JSON.stringify(a) : String(a)
+                  ).join(' ') + "\\n";
+                } catch(e) {
+                  out.textContent += args.join(' ') + "\\n";
+                }
+                origLog(...args);
+              };
+            })();
+          <\\/script>
           <script src="js/${fileName}"><\\/script>
         </body></html>`);
         w.document.close();

@@ -11,7 +11,7 @@
   }
 
   if (a > b) {
-    document.body.innerHTML = String(a);
+    console.log(String(a));
     console.log(`Larger number is ${a}.`);
   } else if (b > a) {
     document.body.innerHTML = String(b);
