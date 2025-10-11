@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CS648 – Assignment 6 (Interactive)</title>
+    <style>
+      :root {
+        --spacing: 14px;
+      }
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial,
+          sans-serif;
+        margin: 2rem;
+      }
+      h1 {
+        margin-bottom: var(--spacing);
+      }
+      .grid {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing);
+        max-width: 520px;
+      }
+      button {
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        background: #f8f8f8;
+        cursor: pointer;
+        text-align: left;
+      }
+      button:hover {
+        background: #efefef;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Assignment 6 — Interactive Runner</h1>
+
+    <div class="grid">
+      <button onclick="runTask('01-larger-or-smaller.js')">
+        01 — Larger or Smaller?
+      </button>
+      <button onclick="runTask('02-coinflip.js')">02 — Coin Flip</button>
+      <button onclick="runTask('03-coinflip-redux.js')">
+        03 — Coin Flip Redux
+      </button>
+      <button onclick="runTask('04-coinflip-streak.js')">
+        04 — Coin Flip Streak
+      </button>
+      <button onclick="runTask('05-triangle.js')">
+        05 — Looping a Triangle
+      </button>
+      <button onclick="runTask('06-odd-or-even.js')">06 — Odd or Even?</button>
+      <button onclick="runTask('07-marco-polo.js')">07 — Marco! Polo!</button>
+      <button onclick="runTask('08-countdown.js')">08 — Countdown</button>
+    </div>
+
+    <script>
+      function runTask(fileName) {
+        const w = window.open("", "_blank", "popup,width=800,height=700");
+        if (!w) {
+          alert("Pop-up blocked. Please allow pop-ups for this file.");
+          return;
+        }
+        w.document.open();
+        w.document.write(`<!doctype html>
+        <html><head>
+          <meta charset='utf-8'/>
+          <title>${fileName}</title>
+          <style>
+            body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; padding: 1rem 1.25rem; }
+            .box { background:#f9f9f9; border:1px solid #e6e6e6; border-radius:10px; padding:12px; margin-top:10px; }
+          </style>
+        </head>
+        <body>
+          <h2>Runner: ${fileName}</h2>
+          <div class='box'>Interact with this window for any prompts/alerts. Open this window’s console for logs.</div>
+          <script src="js/${fileName}"><\\/script>
+        </body></html>`);
+        w.document.close();
+      }
+    </script>
+  </body>
+</html>
